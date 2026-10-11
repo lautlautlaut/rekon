@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#172820">
+    <meta name="description" content="Ruang kerja rekonsiliasi rekening bank dan transaksi internal.">
+    <title>Rekon — Rekonsiliasi Bank</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell" id="app-shell">
+      <aside class="sidebar" aria-label="Navigasi utama">
+        <a class="brand" href="#utama" aria-label="Rekon, halaman utama">
+          <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+          <span class="brand-name">rekon<span class="brand-period">.</span></span>
+        </a>
+        <div class="workspace-label">RUANG KERJA</div>
+        <nav class="primary-nav">
+          <a class="nav-item active" href="#utama" aria-current="page"><span class="nav-icon nav-grid" aria-hidden="true"></span>Ikhtisar</a>
+          <a class="nav-item" href="#pasangkan"><span class="nav-icon nav-arrows" aria-hidden="true"></span>Rekonsiliasi<span class="nav-count" id="nav-open-count">—</span></a>
+          <a class="nav-item" href="#pasangkan"><span class="nav-icon nav-list" aria-hidden="true"></span>Transaksi</a>
+        </nav>
+        <div class="sidebar-bottom">
+          <div class="side-status"><span class="status-light"></span><span id="connection-label">Demo mode aktif</span></div>
+          <div class="profile-row"><span class="avatar">RK</span><span class="profile-copy"><strong id="profile-name">Demo User</strong><small>Mode publik</small></span></div>
+        </div>
+      </aside>
+
+      <main class="main-content" id="utama">
+        <header class="topbar">
+          <div class="breadcrumbs"><span>Ruang kerja</span><span class="crumb-divider">/</span><strong>Ikhtisar</strong></div>
+          <div class="topbar-right"><span class="today-label" id="today-label"></span><span class="auth-user-email" id="user-email">demo@rekon.app</span><span class="topbar-avatar">RK</span><button class="logout-button" id="logout-button" type="button">Demo</button></div>
+        </header>
+
+        <section class="page-heading" aria-labelledby="page-title">
+          <div><p class="eyebrow"><span class="eyebrow-line"></span>MEJA KONTROL KEUANGAN</p><h1 id="page-title">Rekonsiliasi bank<span class="title-period">.</span></h1><p class="page-subtitle">Cocokkan catatan internal dengan mutasi rekening, satu transaksi setiap kali.</p></div>
+          <div class="heading-actions">
+            <button class="button button-quiet" type="button" data-entry="account"><span class="button-plus" aria-hidden="true">+</span> Rekening</button>
+            <button class="button button-quiet" type="button" data-entry="transaction"><span class="button-plus" aria-hidden="true">+</span> Transaksi buku</button>
+            <button class="button button-primary" type="button" data-entry="statement"><span class="button-plus" aria-hidden="true">+</span> Mutasi bank</button>
+          </div>
+        </section>
+
+        <div class="demo-notice" id="demo-notice"><span class="notice-dot"></span><span>Mode demo aktif. Data tersimpan di browser dan siap dipublikasikan ke GitHub Pages.</span></div>
+        <div class="error-notice" id="error-notice" role="alert" hidden></div>
+
+        <section class="metrics" aria-label="Ringkasan rekonsiliasi">
+          <article class="metric metric-highlight"><div class="metric-top"><span>SUDAH COCOK</span><span class="metric-mark mark-check" aria-hidden="true">✓</span></div><div class="metric-value" id="metric-matched">—</div><div class="metric-foot"><span id="metric-matched-count">— transaksi</span><span class="metric-trend">terkonfirmasi</span></div></article>
+          <article class="metric"><div class="metric-top"><span>MENUNGGU · BUKU</span><span class="metric-mark mark-book" aria-hidden="true">B</span></div><div class="metric-value" id="metric-books">—</div><div class="metric-foot"><span id="metric-books-count">— transaksi</span><span>perlu ditinjau</span></div></article>
+          <article class="metric"><div class="metric-top"><span>MENUNGGU · BANK</span><span class="metric-mark mark-bank" aria-hidden="true">↗</span></div><div class="metric-value" id="metric-bank">—</div><div class="metric-foot"><span id="metric-bank-count">— mutasi</span><span>perlu ditinjau</span></div></article>
+          <article class="metric metric-rate"><div class="metric-top"><span>TINGKAT COCOK</span><span class="metric-mark mark-rate" aria-hidden="true">%</span></div><div class="metric-value" id="metric-rate">—%</div><div class="rate-track"><span id="rate-track-fill"></span></div><div class="metric-foot"><span id="metric-rate-count">— dari — pasang</span><span>berdasarkan jumlah</span></div></article>
+        </section>
+
+        <section class="reconcile-section" id="pasangkan" aria-labelledby="reconcile-title">
+          <div class="section-heading">
+            <div class="section-title-block"><div class="section-kicker">RUANG KERJA <span>01</span></div><div class="section-title-line"><h2 id="reconcile-title">Pasangkan transaksi</h2><span class="period-badge" id="visible-count">0 baris</span></div><p class="section-description">Pilih satu catatan di setiap sisi untuk membuat pasangan.</p></div>
+            <div class="filter-group">
+              <label class="select-wrap"><span class="visually-hidden">Filter rekening</span><select id="account-filter"><option value="all">Semua rekening</option></select><span class="select-chevron" aria-hidden="true">⌄</span></label>
+              <label class="select-wrap"><span class="visually-hidden">Filter status</span><select id="status-filter"><option value="all">Semua status</option><option value="unmatched">Belum cocok</option><option value="matched">Sudah cocok</option></select><span class="select-chevron" aria-hidden="true">⌄</span></label>
+              <label class="search-box"><span class="search-icon" aria-hidden="true"></span><span class="visually-hidden">Cari transaksi</span><input id="search-filter" type="search" placeholder="Cari transaksi..." autocomplete="off"></label>
+            </div>
+          </div>
+
+          <div class="match-toolbar" id="match-toolbar" aria-live="polite"><span class="selection-copy" id="selection-copy">Pilih transaksi buku dan mutasi bank</span><span class="selection-hint">Nominal dan arah harus sama</span><button class="button button-match" id="match-button" type="button" disabled>Cocokkan pilihan <span aria-hidden="true">→</span></button></div>
+
+          <div class="ledger-grid">
+            <section class="ledger-panel" aria-labelledby="books-title">
+              <header class="ledger-header"><div class="ledger-heading"><span class="ledger-symbol book-symbol" aria-hidden="true">B</span><div><h3 id="books-title">Buku internal</h3><p>Catatan transaksi perusahaan</p></div></div><span class="ledger-total" id="books-total">0 baris</span></header>
+              <div class="table-scroll"><table><thead><tr><th>TRANSAKSI</th><th>TANGGAL</th><th class="amount-heading">NOMINAL</th><th><span class="visually-hidden">Status</span></th></tr></thead><tbody id="books-rows"></tbody></table></div>
+              <div class="empty-state" id="books-empty" hidden><span class="empty-glyph" aria-hidden="true">B</span><strong>Belum ada transaksi buku</strong><span>Catatan internal akan muncul di sini.</span></div>
+            </section>
+
+            <div class="exchange-mark" aria-hidden="true"><span>⇄</span></div>
+
+            <section class="ledger-panel" aria-labelledby="bank-title">
+              <header class="ledger-header"><div class="ledger-heading"><span class="ledger-symbol bank-symbol" aria-hidden="true">↗</span><div><h3 id="bank-title">Mutasi rekening</h3><p>Transaksi yang tercatat bank</p></div></div><span class="ledger-total" id="bank-total">0 baris</span></header>
+              <div class="table-scroll"><table><thead><tr><th>TRANSAKSI</th><th>TANGGAL</th><th class="amount-heading">NOMINAL</th><th><span class="visually-hidden">Status</span></th></tr></thead><tbody id="bank-rows"></tbody></table></div>
+              <div class="empty-state" id="bank-empty" hidden><span class="empty-glyph bank-glyph" aria-hidden="true">↗</span><strong>Belum ada mutasi bank</strong><span>Impor manual mutasi rekening Anda.</span></div>
+            </section>
+          </div>
+          <footer class="workspace-footer"><span><span class="footer-dot"></span><span id="footer-account-label">Menampilkan semua rekening</span></span><span>Terakhir diperbarui <strong id="last-updated">—</strong><button class="refresh-button" id="refresh-button" type="button" aria-label="Muat ulang data" title="Muat ulang data">↻</button></span></footer>
+        </section>
+        <footer class="page-footer"><span>REKON <span>·</span> RUANG KERJA KEUANGAN</span><span>Data tersinkron dengan aman</span></footer>
+      </main>
+    </div>
+
+    <dialog class="entry-dialog" id="entry-dialog" aria-labelledby="dialog-title">
+      <form id="entry-form" method="dialog">
+        <header class="dialog-header"><div><p class="eyebrow"><span class="eyebrow-line"></span>DATA REKENING</p><h2 id="dialog-title">Tambah transaksi</h2></div><button class="dialog-close" id="dialog-close" type="button" aria-label="Tutup">×</button></header>
+        <div id="account-fields" hidden>
+          <label class="field-label" for="bank-name">Nama bank</label><input class="form-input" id="bank-name" name="bank_name" placeholder="Contoh: Bank Mandiri" required>
+          <label class="field-label" for="account-name">Nama rekening</label><input class="form-input" id="account-name" name="account_name" placeholder="Contoh: Operasional Utama" required>
+          <label class="field-label" for="account-number">Nomor rekening <span>(opsional)</span></label><input class="form-input" id="account-number" name="account_number" placeholder="Nomor rekening">
+          <label class="field-label" for="currency">Mata uang</label><input class="form-input" id="currency" name="currency" value="IDR" maxlength="3" required>
+        </div>
+        <div id="transaction-fields" hidden>
+          <label class="field-label" for="record-account">Rekening</label><select class="form-input" id="record-account" name="account_id" required></select>
+          <label class="field-label" for="record-description">Deskripsi</label><input class="form-input" id="record-description" name="description" placeholder="Contoh: Pembayaran invoice" required>
+          <div class="field-grid"><div><label class="field-label" for="record-date">Tanggal</label><input class="form-input" id="record-date" name="transaction_date" type="date" required></div><div><label class="field-label" for="record-amount">Nominal</label><input class="form-input" id="record-amount" name="amount" type="number" min="1" step="0.01" placeholder="0" required></div></div>
+          <div class="field-grid"><div><label class="field-label" for="record-direction">Arah transaksi</label><select class="form-input" id="record-direction" name="direction" required><option value="debit">Keluar · debit</option><option value="credit">Masuk · kredit</option></select></div><div><label class="field-label" for="record-reference">Referensi <span>(opsional)</span></label><input class="form-input" id="record-reference" name="reference" placeholder="No. invoice / ref."></div></div>
+        </div>
+        <p class="dialog-error" id="dialog-error" role="alert" hidden></p>
+        <footer class="dialog-actions"><button class="button button-quiet" id="dialog-cancel" type="button">Batal</button><button class="button button-primary" id="dialog-submit" type="submit">Simpan data <span aria-hidden="true">→</span></button></footer>
+      </form>
+    </dialog>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
